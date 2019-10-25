@@ -11,6 +11,7 @@ namespace TaskManager2.ViewModels
     class ProcessViewModel : Screen
     {
 
+        //todo
         public ProcessViewModel()
         {
             var list = new List<string>();
