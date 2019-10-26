@@ -30,7 +30,7 @@
             </Grid.RowDefinitions>
 
             <!-- Row 1 -->
-            <!-- Todo replace button with tab -->           
+            <!-- Todo replace button with tab-->           
             <Button x:Name="ProcessButton" Grid.Column="1" Grid.Row="1">Process</Button>
             <Button x:Name="RuleButton" Grid.Column="2" Grid.Row="1">Rule</Button>
             
