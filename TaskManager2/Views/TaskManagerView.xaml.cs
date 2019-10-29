@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MahApps.Metro.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,7 @@ namespace TaskManager2.Views
     /// <summary>
     /// Interaction logic for TaskManagerView.xaml
     /// </summary>
-    public partial class TaskManagerView: Window
+    public partial class TaskManagerView : MetroWindow
     {
         public TaskManagerView()
         {

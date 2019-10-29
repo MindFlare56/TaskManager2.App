@@ -4,14 +4,35 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TaskManager2.Views"
-             mc:Ignorable="d" Background="White"
+             mc:Ignorable="d"
+             xmlns:treeListView="clr-namespace:TreeListView;assembly=TreeListView"
              d:DesignHeight="450" d:DesignWidth="800">
-    <DataGrid HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding Data}">
-        <DataGrid.Columns>
-            <DataGridTextColumn Header="Id" Width="*"/>
-            <DataGridTextColumn Header="Name" Width="*"/>
-            <DataGridTextColumn Header="CPU" Width="*"/>
-            <DataGridTextColumn Header="Memory" Width="*"/>
-        </DataGrid.Columns>
-    </DataGrid>
+    <treeListView:TreeListView
+            ChildrenPropertyName="Children"
+            ItemsSource="{Binding Collection}"
+            Style="{StaticResource VirtualizedMetroTreeListView}">
+        <treeListView:TreeListView.View>
+            <GridView>
+                <GridViewColumn Width="200" Header="Name">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+                <GridViewColumn
+                        Width="100"
+                        DisplayMemberBinding="{Binding Pid}"
+                        Header="Pid" />
+                <GridViewColumn
+                        Width="200"
+                        DisplayMemberBinding="{Binding Cpu}"
+                        Header="Cpu" />
+                <GridViewColumn
+                        Width="200"
+                        DisplayMemberBinding="{Binding Memory}"
+                        Header="Memory" />
+            </GridView>
+        </treeListView:TreeListView.View>
+    </treeListView:TreeListView>
 </UserControl>

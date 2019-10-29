@@ -5,16 +5,30 @@ using System.Collections.ObjectModel;
 namespace Common
 {
     public static class ExtensionMethods
-    {
-
+    {       
         public static ObservableCollection<T> AddAll<T>(this ObservableCollection<T> observableCollection, T[] array)
-        {
-            observableCollection = new ObservableCollection<T>();
+        {            
             for (int i = 0; i < array.Length; ++i) {
                 observableCollection.Add(array[i]);
             }
             return observableCollection;
         }
+
+        public static ObservableCollection<T> AddAll<T>(this ObservableCollection<T> observableCollection, List<T> array)
+        {            
+            for (int i = 0; i < array.Count; ++i) {
+                observableCollection.Add(array[i]);
+            }
+            return observableCollection;
+        }
+
+        public static ObservableCollection<T> AddAll<T>(this ObservableCollection<T> observableCollection, ObservableCollection<T> array)
+        {            
+            for (int i = 0; i < array.Count; ++i) {
+                observableCollection.Add(array[i]);
+            }
+            return observableCollection;
+        }        
 
         public static List<T> AddAll<T>(this List<T> list, T[] array)
         {
