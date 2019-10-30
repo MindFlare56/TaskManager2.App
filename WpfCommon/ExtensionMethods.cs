@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Caliburn.Micro;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
@@ -26,6 +27,14 @@ namespace WpfLibrary {
                 }
             }
             return observableCollection;
+        }
+
+        public static BindableCollection<T> AddAll<T>(this BindableCollection<T> collection, IEnumerable<T> enumerable)
+        {
+            foreach (var value in enumerable) {
+                collection.Add(value);
+            }            
+            return collection;
         }
     } 
 }

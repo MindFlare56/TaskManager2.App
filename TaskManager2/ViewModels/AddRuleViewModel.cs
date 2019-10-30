@@ -1,40 +1,43 @@
 ﻿using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WpfLibrary;
 
 namespace TaskManager2.ViewModels
 {
     class AddRuleViewModel : Screen
     {
 
-        private BindableCollection<string> processes = new BindableCollection<string>();
-        private BindableCollection<string> types = new BindableCollection<string>();
-        private BindableCollection<string> selctors = new BindableCollection<string>();
-        private string value = "0";
-        private BindableCollection<string> triggers = new BindableCollection<string>();
+        private ObservableCollection<string> processes = new ObservableCollection<string>();
+        private ObservableCollection<string> types = new ObservableCollection<string>();
+        private ObservableCollection<string> selctors = new ObservableCollection<string>();
+        private string value;
+        private ObservableCollection<string> triggers = new ObservableCollection<string>();
 
         public AddRuleViewModel(Process[] systemProcesses)
         {
-            //processes = systemProcesses.Select
+            var collection = new ObservableCollection<string>(systemProcesses.Select(process => process.ProcessName));
+            Processes = collection;           
         }
 
-        public BindableCollection<string> Processes
+        public ObservableCollection<string> Processes
         {
             get => processes;
             set => Set(ref processes, value);
         }
 
-        public BindableCollection<string> Types
+        public ObservableCollection<string> Types
         {
             get => types;
             set => Set(ref types, value);
         }
 
-        public BindableCollection<string> Selctors
+        public ObservableCollection<string> Selctors
         {
             get => selctors;
             set => Set(ref selctors, value);
@@ -46,7 +49,7 @@ namespace TaskManager2.ViewModels
             set => Set(ref this.value, value);
         }
 
-        public BindableCollection<string> Triggers
+        public ObservableCollection<string> Triggers
         {
             get => triggers;
             set => Set(ref triggers, value);

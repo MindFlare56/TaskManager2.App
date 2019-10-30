@@ -22,6 +22,14 @@ namespace Common
             return observableCollection;
         }
 
+        public static ObservableCollection<T> AddAll<T>(this ObservableCollection<T> observableCollection, Collection<T> array)
+        {
+            for (int i = 0; i < array.Count; ++i) {
+                observableCollection.Add(array[i]);
+            }
+            return observableCollection;
+        }
+
         public static ObservableCollection<T> AddAll<T>(this ObservableCollection<T> observableCollection, ObservableCollection<T> array)
         {            
             for (int i = 0; i < array.Count; ++i) {

@@ -6,46 +6,64 @@
              xmlns:local="clr-namespace:TaskManager2.Views"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
-             Width="260">
-    <Grid HorizontalAlignment="Center">
+             MinWidth="340" MinHeight="240">
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid.RowDefinitions>
-            <RowDefinition Height="16"/>    <!--  0 -->
-            <RowDefinition Height="auto"/>  <!--  1 -->
-            <RowDefinition Height="8"/>     <!--  2 -->
-            <RowDefinition Height="auto"/>  <!--  3 -->
-            <RowDefinition Height="8"/>     <!--  4 -->
-            <RowDefinition Height="auto"/>  <!--  5 -->
-            <RowDefinition Height="8"/>     <!--  6 -->
-            <RowDefinition Height="auto"/>  <!--  7 -->
-            <RowDefinition Height="24"/>     <!--  8 -->
-            <RowDefinition Height="auto"/>  <!--  9 -->            
-            <RowDefinition Height="16"/>    <!-- 10 -->            
-            <RowDefinition Height="*"/>     <!-- 11 -->
+            <!--  0 -->
+            <RowDefinition Height="16"/>
+            <!--  1 -->
+            <RowDefinition Height="auto"/>
+            <!--  2 -->
+            <RowDefinition Height="8"/>
+            <!--  3 -->
+            <RowDefinition Height="auto"/>
+            <!--  4 -->
+            <RowDefinition Height="8"/>
+            <!--  5 -->
+            <RowDefinition Height="auto"/>
+            <!--  6 -->
+            <RowDefinition Height="8"/>
+            <!--  7 -->
+            <RowDefinition Height="auto"/>
+            <!--  8 -->
+            <RowDefinition Height="24"/>
+            <!--  9 -->
+            <RowDefinition Height="auto"/>
+            <!-- 10 -->
+            <RowDefinition Height="16"/>
+            <!-- 11 -->
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="16" />
             <!--  0 -->
-            <ColumnDefinition Width="auto" />
-            <!--  1 -->
-            <ColumnDefinition Width="8" />
-            <!--  2 -->
-            <ColumnDefinition Width="auto" />
-            <!--  3 -->
-            <ColumnDefinition Width="8" />
-            <!--  4 -->
-            <ColumnDefinition Width="auto" />
-            <!--  5 -->
-            <ColumnDefinition Width="*" />
-            <!--  6 -->
             <ColumnDefinition Width="16" />
+            <!--  1 -->
+            <ColumnDefinition Width="auto" />
+            <!--  2 -->
+            <ColumnDefinition Width="8" />
+            <!--  3 -->
+            <ColumnDefinition Width="auto" />
+            <!--  4 -->
+            <ColumnDefinition Width="8" />
+            <!--  5 -->
+            <ColumnDefinition Width="auto" />
+            <!--  6 -->            
+            <ColumnDefinition Width="8" />
             <!--  7 -->
+            <ColumnDefinition Width="auto" />
+            <!--  8 -->
+            <ColumnDefinition Width="*" />
+            <!--  9 -->
+            <ColumnDefinition Width="16" />
         </Grid.ColumnDefinitions>
 
         <!-- Row 1 -->
-        <ComboBox x:Name="List" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="5"/>
+        <Label Grid.Row="1" Grid.Column="1" Content="Process"/>
+        <ComboBox x:Name="Processes" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="5"/>
 
         <!-- Row 3 -->
-        <ComboBox x:Name="Type"  Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="5">
+        <Label Grid.Row="3" Grid.Column="1" Content="Type"/>
+        <ComboBox x:Name="Type"  Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="5">
             <ComboBoxItem>
                 <TextBlock Text="Cpu "/>
             </ComboBoxItem>
@@ -55,7 +73,8 @@
         </ComboBox>
 
         <!-- Row 5 -->
-        <ComboBox x:Name="Selector" Grid.Row="5" Grid.Column="1">
+        <Label Grid.Row="5" Grid.Column="1" Content="Selector"/>
+        <ComboBox x:Name="Selector" Grid.Row="5" Grid.Column="3">
             <ListBoxItem>
                 <TextBlock Text="&lt; "/>
             </ListBoxItem>
@@ -63,11 +82,12 @@
                 <TextBlock Text="&gt; "/>
             </ListBoxItem>
         </ComboBox>
-        <TextBox x:Name="Value" Grid.Row="5" Grid.Column="3" MinWidth="60"></TextBox>
-        <TextBox Grid.Row="5" Grid.Column="5" MinWidth="40" TextAlignment="Right" IsReadOnly="True" IsHitTestVisible="False" BorderThickness="0 0 0 0">MB</TextBox>
+        <TextBox x:Name="Value" Grid.Row="5" Grid.Column="5" MinWidth="60"></TextBox>
+        <TextBox Grid.Row="5" Grid.Column="7" MinWidth="40" TextAlignment="Right" IsReadOnly="True" IsHitTestVisible="False" BorderThickness="0 0 0 0">MB</TextBox>
 
         <!-- Row 7 -->
-        <ComboBox x:Name="Trigger" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="5">
+        <Label Grid.Row="7" Grid.Column="1" Content="Trigger"/>
+        <ComboBox x:Name="Trigger" Grid.Row="7" Grid.Column="3" Grid.ColumnSpan="5">
             <ComboBoxItem>
                 <TextBlock Text="Info "/>
             </ComboBoxItem>
@@ -76,8 +96,8 @@
             </ComboBoxItem>
         </ComboBox>
 
-        <!-- Row 9 -->
-        <Button x:Name="RemoveRule" Grid.Row="9" Grid.Column="1">Remove</Button>
-        <Button x:Name="AddRule" Grid.Row="9" Grid.Column="5">Add</Button>
+        <!-- Row 9 -->        
+        <Button x:Name="RemoveRule" Grid.Row="9" Grid.Column="3">Remove</Button>
+        <Button x:Name="AddRule" Grid.Row="9" Grid.Column="7">Add</Button>
     </Grid>
 </UserControl>
