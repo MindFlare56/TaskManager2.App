@@ -18,9 +18,9 @@ namespace TaskManager2.Views
     /// <summary>
     /// Interaction logic for CreateRuleView.xaml
     /// </summary>
-    public partial class CreateRuleView: UserControl
+    public partial class AddRuleView: UserControl
     {
-        public CreateRuleView()
+        public AddRuleView()
         {
             InitializeComponent();
         }

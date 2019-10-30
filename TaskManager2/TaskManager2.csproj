@@ -107,12 +107,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\ProcessData.cs" />
-    <Compile Include="ViewModels\CreateRuleViewModel.cs" />
+    <Compile Include="ViewModels\AddRuleViewModel.cs" />
     <Compile Include="ViewModels\ProcessViewModel.cs" />
     <Compile Include="ViewModels\RuleViewModel.cs" />
     <Compile Include="ViewModels\TaskManagerViewModel.cs" />
-    <Compile Include="Views\CreateRuleView.xaml.cs">
-      <DependentUpon>CreateRuleView.xaml</DependentUpon>
+    <Compile Include="Views\AddRuleView.xaml.cs">
+      <DependentUpon>AddRuleView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProcessView.xaml.cs">
       <DependentUpon>ProcessView.xaml</DependentUpon>
@@ -153,7 +153,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\CreateRuleView.xaml">
+    <Page Include="Views\AddRuleView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

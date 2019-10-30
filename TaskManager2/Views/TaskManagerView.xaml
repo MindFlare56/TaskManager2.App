@@ -10,10 +10,11 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top" BorderBrush="WhiteSmoke" BorderThickness="0 0 0 1">
             <MenuItem Header="_File"></MenuItem>
-            <MenuItem Header="_Options"></MenuItem>
-            <MenuItem Header="_View">
-                <MenuItem Header="https://www.wpf-tutorial.com/common-interface-controls/menu-control/" />
+            <MenuItem Header="_Options">
+                <MenuItem Header="Add rule" x:Name="AddRule"/>
+                <MenuItem Header="Add program" x:Name="AddProgram"/>
             </MenuItem>
+            <MenuItem Header="_View"></MenuItem>
         </Menu>
         <Grid>
             <Grid.Resources >

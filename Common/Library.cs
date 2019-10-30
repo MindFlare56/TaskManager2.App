@@ -16,31 +16,35 @@ namespace Common
     public static class Library
     {
 
-
         public static Dictionary<Key, Value> BytesToJson<Key, Value>(byte[] bytes)
         {
             string bytesString = Encoding.UTF8.GetString(bytes);
             return JsonConvert.DeserializeObject<Dictionary<Key, Value>>(bytesString);
         }
 
-        public static string ListToString<T>(List<T> list)
+        public static string ListToString<T>(Collection<T> list)
         {            
             return string.Join(Environment.NewLine, list);
         }
 
-        public static string ToMultilinesString<T>(this List<T> list)
+        public static string ArrayToString<T>(T[] array)
+        {
+            return string.Join(Environment.NewLine, array);
+        }
+
+        public static string ToMultilinesString<T>(this Collection<T> list)
         {
             return ListToString<T>(list);
         }
 
-        public static string SubList<T>(this List<T> list, string propertyName)
+        public static string SubArray<T>(this T[] array, string propertyName)
         {
-            return ListToString<T>(list);
+            return ArrayToString<T>(array);
         }      
 
-        public static List<FieldType> SubList<ListType, FieldType>(this List<ListType> list, Expression<Func<ListType, FieldType>> property)
+        public static Collection<FieldType> SubList<ListType, FieldType>(this Collection<ListType> list, Expression<Func<ListType, FieldType>> property)
         {
-            var subList = new List<FieldType>();
+            var subList = new Collection<FieldType>();
             foreach (object item in list) {
                 foreach (var field in GetProperties(item)) {
                     MemberExpression expressionBody = (MemberExpression) property.Body;                    
@@ -53,9 +57,9 @@ namespace Common
             return subList;
         }
 
-        public static List<FieldInfo> GetFields(object instance)
+        public static Collection<FieldInfo> GetFields(object instance)
         {
-            var fieldsList = new List<FieldInfo>();
+            var fieldsList = new Collection<FieldInfo>();
             Type type = instance.GetType();
             var fields = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic);
             foreach (var field in fields) {
@@ -64,9 +68,9 @@ namespace Common
             return fieldsList;
         }
 
-        public static List<PropertyInfo> GetProperties(object instance)
+        public static Collection<PropertyInfo> GetProperties(object instance)
         {
-            var fieldsList = new List<PropertyInfo>();
+            var fieldsList = new Collection<PropertyInfo>();
             Type type = instance.GetType();
             var fields = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
             foreach (var field in fields) {

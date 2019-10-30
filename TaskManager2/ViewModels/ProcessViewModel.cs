@@ -22,12 +22,11 @@ namespace TaskManager2.ViewModels
 {
     class ProcessViewModel: Screen
     {
-
-        private Process[] systemProcesses = Process.GetProcesses(Environment.MachineName);
+        
         private ObservableCollection<Process> processes = new ObservableCollection<Process>();
         private ObservableCollection<ProcessData> collection = new ObservableCollection<ProcessData>();
 
-        public ProcessViewModel()
+        public ProcessViewModel(Process[] systemProcesses)
         {
             processes = processes?.AddAll(systemProcesses);                        
             Collection = new ObservableCollection<ProcessData> {
