@@ -88,11 +88,11 @@ namespace Server
 
         private void GetPerformanceCountersValues(List<PerformanceCounter> counters)
         {
-            int i = 0;
-            Thread.Sleep(1000); //help counters to get values
+            int i = 0;            
             int id = 0;
+            Thread.Sleep(1000);
             foreach (var counter in counters) {
-                if (processes[i].ProcessName != "Idle") { //this process is only for system to not freeze         
+                if (processes[i].ProcessName != "Idle") {
                     if (processes[i].HandleCount != 1) { //id algorith doesn't work at all
                         ++id;
                         processorUsages[processes[i].ProcessName + "#" + id] = Math.Round(counter.NextValue() / Environment.ProcessorCount, 2).ToString();                                                                      
