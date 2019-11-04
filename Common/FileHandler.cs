@@ -16,7 +16,7 @@ namespace Common
             return Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         }
 
-        public static string WriteJsonInFile<T>(List<T> data, string fileName, string path = "")
+        public static string WriteJsonInFile<T>(List<T> data, string fileName = "Data.json", string path = "")
         {
             path = ReplaceEmptyPath(path) + "\\" + fileName;
             string json = JsonConvert.SerializeObject(data.ToArray());
@@ -24,7 +24,7 @@ namespace Common
             return path;
         }
 
-        public static string WriteJsonInFile<T>(T data, string fileName, string path = "")
+        public static string WriteJsonInFile<T>(T data, string fileName = "Data.json", string path = "")
         {
             path = ReplaceEmptyPath(path) + "\\" + fileName;            
             string json = JsonConvert.SerializeObject(data);
@@ -32,7 +32,7 @@ namespace Common
             return path;
         }
 
-        public static List<T> ReadJsonInFile<T>(string fileName, string path = "")
+        public static List<T> ReadJsonInFile<T>(string fileName = "Data.json", string path = "")
         {
             path = ReplaceEmptyPath(path) + "\\" + fileName;
             using (StreamReader r = new StreamReader(path)) {
@@ -68,7 +68,7 @@ namespace Common
             }
         }
 
-        public static T GetLastJsonElement<T>(string fileName, string path = "")
+        public static T GetLastJsonElement<T>(string fileName = "Data.json", string path = "")
         {
             var items = ReadJsonInFile<T>(fileName, path);
             if (items.Count != 0) {

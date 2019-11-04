@@ -18,17 +18,7 @@ namespace Server
         private Dictionary<string, string> processorUsages = new Dictionary<string, string>();
         private readonly ulong systemMemory = new ComputerInfo().TotalPhysicalMemory;
 
-        /*
-           processes = Process.GetProcesses(Environment.MachineName);
-           foreach (var process in processes) {
-               double value = (double) (process.WorkingSet64 * 100) / (double) systemMemory;       
-               var result = string.Format("{0:0.00}", value);
-               if (MemoryUsages.ContainsKey(process.ProcessName)) {
-                   MemoryUsages[process.ProcessName] = result.ToString();
-               } else {
-                   MemoryUsages.Add(process.ProcessName, result.ToString());
-               }                
-           }
+        /*                    
            var counters = new List<PerformanceCounter>();
            foreach (Process process in processes) {
                var counter = new PerformanceCounter("Process", "% Processor Time", process.ProcessName);
@@ -45,51 +35,95 @@ namespace Server
         //todo test to see if process are being changed after 5 seconds
 
         public Server()
-        {           
-            WatchProcesses();            
+        {
+            var counters = new List<PerformanceCounter>();            
+            processes = Process.GetProcesses(Environment.MachineName);            
+            WatchProcesses();
+            LogProcessesDatas();
             while (true) ;
         }
 
         private void WatchProcesses()
         {
-            var timedTask = new TimedTask(GetProcesses(), 5000);                        
+            var timedTask = new TimedTask(5000);
+            timedTask.Watch(GetProcesses);
+            timedTask.Watch(MemoryUsage);
+            timedTask.Watch(CpuUsage);
         }
 
         private void LogProcessesDatas()
         {
-            var timedTask = new TimedTask();
-            timedTask.Watch(MemoryUsage());
-            timedTask.Watch(CpuUsage());
+            var timedTask = new TimedTask(refreshRate: 5000);
+            //todo fix the second thread not activating properly
+            //timedTask.Watch(MemoryUsage);
+            timedTask.Watch(CpuUsage);
             timedTask.Start();
-        }
+        }        
 
-        private async Task GetProcesses()
+        private void GetProcesses()
         {
-            processes = await new Task<Process[]>(() => Process.GetProcesses(Environment.MachineName));
+            processes = Process.GetProcesses(Environment.MachineName);            
+        }                  
+
+        private void WriteToJson(Dictionary<string, string> datas, string fileName = "")
+        {
+            FileHandler.WriteJsonInFile(datas, fileName);
         }
 
-        private async Task MemoryUsage()
+        private void MemoryUsage()
         {
             foreach (var process in processes) {
-                var result = (ulong) process.WorkingSet64 / systemMemory;
+                var result = (double) process.WorkingSet64 / (double) systemMemory;
                 result *= 100;
-                MemoryUsages.Add(process.ProcessName, result.ToString());
-            }            
+                MemoryUsages[process.ProcessName] = string.Format("{0:0.00}", result);
+            }
+            WriteToJson(MemoryUsages, "Memory.json");
+        }        
+
+        private void CpuUsage()
+        {            
+            GetPerformanceCountersValues(CreatePerformanceCounters());
+            WriteToJson(processorUsages, "Cpu.json");
         }
 
-        private async Task CpuUsage()
+        private void GetPerformanceCountersValues(List<PerformanceCounter> counters)
         {
-            //todo refactor
-            //public PerformanceCounter(string categoryName, string counterName, string instanceName, string machineName);
-            foreach (Process process in processes) {
-                var performanceCounter = new PerformanceCounter(
-                    "Process", "% Processor Time", process.ProcessName, Environment.MachineName
-                );
-                double value = performanceCounter.NextValue();
-                processorUsages.Add(process.ProcessName, value.ToString());
-                Thread.Sleep(9);
-            }          
+            int i = 0;
+            Thread.Sleep(1000); //help counters to get values
+            int id = 0;
+            foreach (var counter in counters) {
+                if (processes[i].ProcessName != "Idle") { //this process is only for system to not freeze         
+                    if (processes[i].HandleCount != 1) { //id algorith doesn't work at all
+                        ++id;
+                        processorUsages[processes[i].ProcessName + "#" + id] = Math.Round(counter.NextValue() / Environment.ProcessorCount, 2).ToString();                                                                      
+                    } else {
+                        id = 0;
+                        processorUsages[processes[i].ProcessName + "#" + id] = Math.Round(counter.NextValue() / Environment.ProcessorCount, 2).ToString();
+                    }                    
+                    ++i;
+                }                
+            }
         }
+
+        private List<PerformanceCounter> CreatePerformanceCounters()
+        {
+            var counters = new List<PerformanceCounter>();
+            foreach (Process process in processes) {
+                var counter = new PerformanceCounter("Process", "% Processor Time", process.ProcessName);
+                try {
+                    if (counter.CategoryName == "Process") {
+                        counter.NextValue();
+                        counters.Add(counter);
+                    } else {
+                        Console.WriteLine("Found you nigga");
+                    }
+                } catch (Exception exception) {
+                    Console.WriteLine(counter.CategoryName);
+                    Console.WriteLine("Error " + exception);
+                }                             
+            }
+            return counters;
+        }    
 
         public Dictionary<string, string> MemoryUsages
         {

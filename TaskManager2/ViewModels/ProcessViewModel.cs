@@ -52,10 +52,6 @@ namespace TaskManager2.ViewModels
                 }
             };
             Collection = Collection.AddAll(GetAllProcessDatas());
-
-            string name = processes[2].ProcessName;
-            string percentage = ((((ulong) test().GetAwaiter().GetResult()) / new ComputerInfo().TotalPhysicalMemory) * 100).ToString();
-            Console.WriteLine(name + ": " + percentage + "%");
             //https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.process.workingset64?view=netframework-4.8
             //todo use server to get data from .WorkingSet64 in await method
 
@@ -90,11 +86,6 @@ namespace TaskManager2.ViewModels
                 });
             }
             return collection;
-        }
-
-        private async Task<long> test()
-        {
-            return processes[0].WorkingSet64;
         }
 
         public ObservableCollection<Process> Processes

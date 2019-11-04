@@ -1,61 +1,62 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Threading;
+using System.Timers;
 
 namespace Common
 {
     public class TimedTask
     {
 
-        private DispatcherTimer dispatcherTimer;        
+        private Timer timer;
+        private bool debug;
 
-        public TimedTask(int refreshRate = 500)
+        public TimedTask(int refreshRate = 1000, bool debug = false)
         {
-            Init(refreshRate);
+            Init(refreshRate, debug);
         }
 
-        public TimedTask(Task task, int refreshRate = 500)
+        public TimedTask(Action action, int refreshRate = 1000, bool debug = false)
         {
-            Init(refreshRate);
-            Watch(task);
+            Init(refreshRate, debug);
+            Watch(action);
             Start();
         }
 
-        private void Init(int refreshRate)
+        private void Init(int refreshRate, bool debug)
         {
             RefreshRate = refreshRate;
-            dispatcherTimer = new DispatcherTimer();
+            this.debug = debug;
+            timer = new Timer();
         }
 
         public void Start()
         {
-            dispatcherTimer.Start();             
+            timer.Start();            
         }
 
-        public void Watch(Task task)
+        public void Watch(Action action, bool callOnStart = true)
         {
-            dispatcherTimer.Tick += new EventHandler((sender, eventArgs) => EventHandler(sender, eventArgs, task));
-            dispatcherTimer.Interval = TimeSpan.FromMilliseconds(RefreshRate);            
+            OnCallOnStart(callOnStart, action);
+            timer.Elapsed += new ElapsedEventHandler(new EventHandler((sender, eventArgs) => EventHandler(sender, eventArgs, action)));
+            timer.Interval = RefreshRate;
         }
 
-        private async void EventHandler(object sender, EventArgs eventArgs, Task task)
+        private void OnCallOnStart(bool callOnStart, Action action)
         {
-            Console.WriteLine(DateTime.Now.Second);
-            try {
-                task.Start();
-                Console.WriteLine("?");
-            } catch(Exception execption) {
-                await ShowMessageAsync("An error as occured", execption);
+            if (callOnStart) {
+                var firstEvent = new ElapsedEventHandler(new EventHandler((sender, eventArgs) => EventHandler(sender, eventArgs, action)));
+                firstEvent(null, null);
             }
         }
 
-        private async Task ShowMessageAsync(string message, Exception execption)
-        {
-            throw new NotImplementedException();
+        private async void EventHandler(object sender, EventArgs eventArgs, Action action) {
+            if (debug) {
+                Console.WriteLine(action.Method.Name + " is running!");
+            }            
+            await Task.Run(action);
         }
 
         public int RefreshRate
