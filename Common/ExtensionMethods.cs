@@ -79,6 +79,11 @@ namespace Common
         {
             return int.Parse(data);
         }
+
+        public static double ToDouble(this string data)
+        {
+            return double.Parse(data);
+        }
     }
 
     internal class ContextCallOnlyOnce

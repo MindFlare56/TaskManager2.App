@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,16 +15,19 @@ namespace TaskManager2.ViewModels
     {
 
         private IWindowManager windowManager;
-        private Process[] systemProcesses = Process.GetProcesses(Environment.MachineName);
+        private Process server;
 
         public TaskManagerViewModel()
         {
+            var process = new ProcessStartInfo(FileHandler.GetPathFromSolution(@"Server\bin\Debug\Server.exe"));
+            process.WindowStyle = ProcessWindowStyle.Hidden;
+            server = Process.Start(process);            
             windowManager = new WindowManager();            
         }
 
         public void ProcessButton()
         {
-            ActivateItem(new ProcessViewModel(systemProcesses));
+            ActivateItem(new ProcessViewModel());
         }
 
         public void RuleButton()
@@ -36,12 +40,18 @@ namespace TaskManager2.ViewModels
             dynamic settings = new ExpandoObject();            
             settings.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             settings.Title = "Add a rule";
-            windowManager.ShowDialog(new AddRuleViewModel(systemProcesses), null, settings);
+            windowManager.ShowDialog(new AddRuleViewModel(), null, settings);
         }
 
         public void AddProgram()
         {
             Console.WriteLine("Add program");            
+        }
+
+        public override void CanClose(Action<bool> callback)
+        {
+            server.Close();
+            callback(true);
         }
     }   
 }

@@ -23,78 +23,48 @@ namespace TaskManager2.ViewModels
     class ProcessViewModel: Screen
     {
         
-        private ObservableCollection<Process> processes = new ObservableCollection<Process>();
-        private ObservableCollection<ProcessData> collection = new ObservableCollection<ProcessData>();
+        private ObservableCollection<ProcessTree> collection = new ObservableCollection<ProcessTree>();
+        private Dictionary<string, Dictionary<string, ProcessDatas>> datas;
 
-        public ProcessViewModel(Process[] systemProcesses)
-        {
-            processes = processes?.AddAll(systemProcesses);                        
-            Collection = new ObservableCollection<ProcessData> {
-                new ProcessData {
-                    Name = "Bob",
-                    Pid = "0000",                    
-                    Cpu = "10%",
-                    Memory = "7%",
-                    Children = new List<ProcessData> {
-                        new ProcessData {
-                            Name = "Bob",
-                            Pid = "0001",                            
-                            Cpu = "2%",
-                            Memory = "5%"
-                        },
-                        new ProcessData {
-                            Name = "Bob",
-                            Pid = "0002",                            
-                            Cpu = "8%",
-                            Memory = "2%"
-                        }
-                    }
-                }
-            };
-            Collection = Collection.AddAll(GetAllProcessDatas());
-            //https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.process.workingset64?view=netframework-4.8
-            //todo use server to get data from .WorkingSet64 in await method
-
+        public ProcessViewModel()
+        {                                                
             OnUpdate();
         }
 
         private void OnUpdate()
         {
-            System.Timers.Timer myTimer = new System.Timers.Timer();
-            myTimer.Elapsed += new ElapsedEventHandler(DisplayTimeEvent);
-            myTimer.Interval = 30000;
-            myTimer.Start();
+            var uITimedTask = new UITimedTask(UpdateDatas, 3000);
         }
 
-        private void DisplayTimeEvent(object source, ElapsedEventArgs e)
-        {
-            Console.WriteLine("updating");
-            Collection = Collection.UpdateAll(GetAllProcessDatas(), App.Current);
+        private void UpdateDatas()
+        {            
+            Collection = new ObservableCollection<ProcessTree>(GetProcessTree());
         }
 
-        private ObservableCollection<ProcessData> GetAllProcessDatas()
+        private Dictionary<string, ProcessDatas> GetRawDatas()
         {
-            //todo replace with server values
-            var collection = new ObservableCollection<ProcessData>();
-            for (int i = 0; i < processes.Count; ++i) {
-                var process = processes[i];
-                collection.Add(new ProcessData {
-                    Name = process.ProcessName,
-                    Pid = process.Id.ToString(),                            
-                    Cpu = "_2%",
-                    Memory = "_5%"
-                });
+            string path = FileHandler.GetPathFromSolution(@"Server\bin\Debug\Data.json");
+            return FileHandler.ReadJsonInFile<string, ProcessDatas>(path: path);
+        }
+
+        private Dictionary<string, Dictionary<string, ProcessDatas>> GroupDatas()
+        {            
+            return GetRawDatas().GroupBy(pair => new ProcessKey(pair.Key).Name).ToDictionary(
+                group => group.Key, group => group.ToDictionary(pair => pair.Key, pair => pair.Value)
+            );
+        }
+
+        private ObservableCollection<ProcessTree> GetProcessTree()
+        {
+            var collection = new Collection<ProcessTree>();
+            datas = GroupDatas();
+            foreach (var data in datas) {
+                collection.Add(ProcessTree.FromCollection(data));                
             }
-            return collection;
+            return new ObservableCollection<ProcessTree>(collection);
         }
 
-        public ObservableCollection<Process> Processes
-        {
-            get => processes;
-            set => Set(ref processes, value);
-        }
-
-        public ObservableCollection<ProcessData> Collection
+        public ObservableCollection<ProcessTree> Collection
         {
             get => collection;
             set => Set(ref collection, value);

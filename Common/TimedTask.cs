@@ -12,22 +12,24 @@ namespace Common
 
         private Timer timer;
         private bool debug;
+        private bool wait;
 
-        public TimedTask(int refreshRate = 1000, bool debug = false)
+        public TimedTask(int refreshRate = 1000, bool wait = true, bool debug = false)
         {
-            Init(refreshRate, debug);
+            Init(refreshRate, wait, debug);
         }
 
-        public TimedTask(Action action, int refreshRate = 1000, bool debug = false)
+        public TimedTask(Action action, int refreshRate = 1000, bool wait = true, bool debug = false)
         {
-            Init(refreshRate, debug);
+            Init(refreshRate, wait, debug);            
             Watch(action);
             Start();
         }
 
-        private void Init(int refreshRate, bool debug)
+        private void Init(int refreshRate, bool wait, bool debug)
         {
             RefreshRate = refreshRate;
+            this.wait = wait;
             this.debug = debug;
             timer = new Timer();
         }
@@ -53,10 +55,15 @@ namespace Common
         }
 
         private async void EventHandler(object sender, EventArgs eventArgs, Action action) {
+            //Console.WriteLine(action.Method.Name);            
             if (debug) {
                 Console.WriteLine(action.Method.Name + " is running!");
+            }
+            var task = Task.Run(action);
+            if (wait) {
+                task.Wait();
             }            
-            await Task.Run(action);
+            await task;
         }
 
         public int RefreshRate

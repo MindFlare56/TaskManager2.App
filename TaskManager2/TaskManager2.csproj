@@ -109,7 +109,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Models\ProcessData.cs" />
+    <Compile Include="Models\ProcessTree.cs" />
     <Compile Include="ViewModels\AddRuleViewModel.cs" />
     <Compile Include="ViewModels\ProcessViewModel.cs" />
     <Compile Include="ViewModels\RuleViewModel.cs" />

@@ -19,10 +19,9 @@ namespace TaskManager2.ViewModels
         private string value;
         private ObservableCollection<string> triggers = new ObservableCollection<string>();
 
-        public AddRuleViewModel(Process[] systemProcesses)
+        public AddRuleViewModel()
         {
-            var collection = new ObservableCollection<string>(systemProcesses.Select(process => process.ProcessName));
-            Processes = collection;           
+            //todo get server process
         }
 
         public ObservableCollection<string> Processes

@@ -11,7 +11,7 @@ namespace Server
 
         public static void Main()
         {
-            new Server();
+            new Server().Start();
         }
     }
 }

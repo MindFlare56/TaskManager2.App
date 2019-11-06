@@ -57,9 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.manifest" />
-    <None Include="bin\Debug\Cpu.json" />
     <None Include="bin\Debug\Data.json" />
-    <None Include="bin\Debug\Memory.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="bin\Debug\Server.exe" />
