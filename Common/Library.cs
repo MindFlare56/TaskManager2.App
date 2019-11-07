@@ -16,6 +16,13 @@ namespace Common
     public static class Library
     {
 
+        /* todo convert to method
+        Group
+        var result = rawDatas.GroupBy(pair => new ProcessKey(pair.Key).Name).ToDictionary(
+            group => group.Key, group => group.ToDictionary(pair => pair.Key, pair => pair.Value)
+        );
+        */
+
         public static Dictionary<Key, Value> BytesToJson<Key, Value>(byte[] bytes)
         {
             string bytesString = Encoding.UTF8.GetString(bytes);

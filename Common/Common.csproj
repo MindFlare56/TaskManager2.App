@@ -52,6 +52,7 @@
     <Compile Include="Fields\Username.cs" />
     <Compile Include="FileHandler.cs" />
     <Compile Include="Library.cs" />
+    <Compile Include="ProcessKey.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TimedTask.cs" />
   </ItemGroup>

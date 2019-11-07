@@ -5,7 +5,13 @@ using System.Collections.ObjectModel;
 namespace Common
 {
     public static class ExtensionMethods
-    {       
+    {
+
+        public static double ToDouble(this string data)
+        {
+            return double.Parse(data);
+        }
+
         public static ObservableCollection<T> AddAll<T>(this ObservableCollection<T> observableCollection, T[] array)
         {            
             for (int i = 0; i < array.Length; ++i) {

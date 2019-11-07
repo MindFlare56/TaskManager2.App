@@ -14,32 +14,17 @@ namespace Server
     {
 
         private Process[] processes;
-        private Dictionary<string, string> memoryUsages = new Dictionary<string, string>();
-        private Dictionary<string, string> processorUsages = new Dictionary<string, string>();
-        private readonly ulong systemMemory = new ComputerInfo().TotalPhysicalMemory;
-
-        /*                    
-           var counters = new List<PerformanceCounter>();
-           foreach (Process process in processes) {
-               var counter = new PerformanceCounter("Process", "% Processor Time", process.ProcessName);
-               counter.NextValue();
-               counters.Add(counter);
-           }
-           int i = 0;
-           Thread.Sleep(1000);
-           foreach (var counter in counters) {
-               Console.WriteLine(processes[i].ProcessName + "       | CPU% " + (Math.Round(counter.NextValue(), 1)));
-               ++i;
-           }            
-           */
-        //todo test to see if process are being changed after 5 seconds
+        private string percentage;
+        private List<PerformanceCounter> counters;
+        private CpuHandler cpuHandler;
+        private MemoryHandler memoryHandler;
 
         public Server()
         {
-            var counters = new List<PerformanceCounter>();            
-            processes = Process.GetProcesses(Environment.MachineName);            
-            WatchProcesses();
-            LogProcessesDatas();
+            processes = Process.GetProcesses(Environment.MachineName);
+            cpuHandler = new CpuHandler(processes);
+            memoryHandler = new MemoryHandler(processes);                                   
+            WatchProcesses();            
             while (true) ;
         }
 
@@ -47,94 +32,36 @@ namespace Server
         {
             var timedTask = new TimedTask(5000);
             timedTask.Watch(GetProcesses);
-            timedTask.Watch(MemoryUsage);
-            timedTask.Watch(CpuUsage);
-        }
-
-        private void LogProcessesDatas()
-        {
-            var timedTask = new TimedTask(refreshRate: 5000);
-            //todo fix the second thread not activating properly
-            //timedTask.Watch(MemoryUsage);
-            timedTask.Watch(CpuUsage);
+            timedTask.Watch(cpuHandler.CpuUsage);
+            timedTask.Watch(() => memoryHandler.MemoryUsage());
             timedTask.Start();
-        }        
+        }  
 
         private void GetProcesses()
         {
             processes = Process.GetProcesses(Environment.MachineName);            
-        }                  
+            //todo return process as list and remove idle
+        }                                                      
 
-        private void WriteToJson(Dictionary<string, string> datas, string fileName = "")
+        public string FormatPercentage(string percentage, int decimals)
         {
-            FileHandler.WriteJsonInFile(datas, fileName);
-        }
-
-        private void MemoryUsage()
-        {
-            foreach (var process in processes) {
-                var result = (double) process.WorkingSet64 / (double) systemMemory;
-                result *= 100;
-                MemoryUsages[process.ProcessName] = string.Format("{0:0.00}", result);
+            string decimalsChar = "";
+            for (int i = 0; i < decimals; ++i)
+            {
+                decimalsChar += "0";
             }
-            WriteToJson(MemoryUsages, "Memory.json");
+            return string.Format("{0:0." + decimalsChar + "}", percentage.ToDouble());
         }        
 
-        private void CpuUsage()
-        {            
-            GetPerformanceCountersValues(CreatePerformanceCounters());
-            WriteToJson(processorUsages, "Cpu.json");
+        public string Percentage
+        {
+            get => percentage;
+            set => percentage = value;
         }
-
-        private void GetPerformanceCountersValues(List<PerformanceCounter> counters)
+        public List<PerformanceCounter> Counters
         {
-            int i = 0;            
-            int id = 0;
-            Thread.Sleep(1000);
-            foreach (var counter in counters) {
-                if (processes[i].ProcessName != "Idle") {
-                    if (processes[i].HandleCount != 1) { //id algorith doesn't work at all
-                        ++id;
-                        processorUsages[processes[i].ProcessName + "#" + id] = Math.Round(counter.NextValue() / Environment.ProcessorCount, 2).ToString();                                                                      
-                    } else {
-                        id = 0;
-                        processorUsages[processes[i].ProcessName + "#" + id] = Math.Round(counter.NextValue() / Environment.ProcessorCount, 2).ToString();
-                    }                    
-                    ++i;
-                }                
-            }
-        }
-
-        private List<PerformanceCounter> CreatePerformanceCounters()
-        {
-            var counters = new List<PerformanceCounter>();
-            foreach (Process process in processes) {
-                var counter = new PerformanceCounter("Process", "% Processor Time", process.ProcessName);
-                try {
-                    if (counter.CategoryName == "Process") {
-                        counter.NextValue();
-                        counters.Add(counter);
-                    } else {
-                        Console.WriteLine("Found you nigga");
-                    }
-                } catch (Exception exception) {
-                    Console.WriteLine(counter.CategoryName);
-                    Console.WriteLine("Error " + exception);
-                }                             
-            }
-            return counters;
-        }    
-
-        public Dictionary<string, string> MemoryUsages
-        {
-            get => memoryUsages;
-            set => memoryUsages = value;
-        }
-
-        public Dictionary<string, string> ProcessorUsages
-        {
-            get => processorUsages;
-            set => processorUsages = value;
+            get => counters;
+            set => counters = value;
         }
     }
 }
