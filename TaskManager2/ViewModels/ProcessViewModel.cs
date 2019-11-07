@@ -24,7 +24,7 @@ namespace TaskManager2.ViewModels
     {
         
         private ObservableCollection<ProcessTree> collection = new ObservableCollection<ProcessTree>();
-        private Dictionary<string, Dictionary<string, ProcessDatas>> datas;
+        private ComputerInfo computerInfo;
 
         public ProcessViewModel()
         {                                                
@@ -33,27 +33,28 @@ namespace TaskManager2.ViewModels
 
         private void OnUpdate()
         {
-            var uITimedTask = new UITimedTask(UpdateDatas, 3000);
+            //var uITimedTask = new UITimedTask(UpdateDatas, 3000);
         }
-
+        /*
         private void UpdateDatas()
         {            
             Collection = new ObservableCollection<ProcessTree>(GetProcessTree());
         }
 
-        private Dictionary<string, ProcessDatas> GetRawDatas()
+        private ComputerInfo GetRawDatas()
         {
             string path = FileHandler.GetPathFromSolution(@"Server\bin\Debug\Data.json");
-            return FileHandler.ReadJsonInFile<string, ProcessDatas>(path: path);
+            return FileHandler.ReadJsonInFile<ComputerInfo>(path: path);
         }
 
+        
         private Dictionary<string, Dictionary<string, ProcessDatas>> GroupDatas()
         {            
             return GetRawDatas().GroupBy(pair => new ProcessKey(pair.Key).Name).ToDictionary(
                 group => group.Key, group => group.ToDictionary(pair => pair.Key, pair => pair.Value)
             );
         }
-
+        
         private ObservableCollection<ProcessTree> GetProcessTree()
         {
             var collection = new Collection<ProcessTree>();
@@ -63,7 +64,7 @@ namespace TaskManager2.ViewModels
             }
             return new ObservableCollection<ProcessTree>(collection);
         }
-
+        */
         public ObservableCollection<ProcessTree> Collection
         {
             get => collection;

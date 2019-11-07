@@ -50,7 +50,7 @@ namespace TaskManager2.Models
         {
             get; set;
         }
-
+        /*
         internal static ProcessTree FromCollection(KeyValuePair<string, Dictionary<string, ComputerUsage>> data)
         {
             if (data.Value.Count > 1) {
@@ -58,7 +58,7 @@ namespace TaskManager2.Models
             }
             return AddSingle(data);            
         }
-
+        
         private static ProcessTree AddMultiple(KeyValuePair<string, Dictionary<string, ComputerUsage>> datas)
         {            
             var value = GetValuesSum(datas.Value);            
@@ -71,7 +71,7 @@ namespace TaskManager2.Models
             };
             return root;
         }
-
+        
         private static List<ProcessTree> GetChilds(KeyValuePair<string, Dictionary<string, ComputerUsage>> datas)
         {
             var list = new List<ProcessTree>();
@@ -104,6 +104,7 @@ namespace TaskManager2.Models
                 Cpu = data.Value.CpuUsage,
                 Memory = data.Value.MemoryUsage
             };            
-        }        
+        }   
+        */
     }
 }

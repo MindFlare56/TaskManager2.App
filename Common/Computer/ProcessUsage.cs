@@ -20,7 +20,7 @@ namespace Common.Machine
         public static List<ProcessUsage> GetUsages(string machineName = "")
         {
             var list = new List<ProcessUsage>();
-            machineName = machineName == "" ? Environment.MachineName : machineName;            
+            machineName = machineName == "" ? Environment.MachineName : machineName;          
             foreach (var process in GetProcesses(machineName)) {
                 list.Add(new ProcessUsage(process));
             }
